@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Análise de Grupos - Hotel", layout="centered")
 
 # --- REGRAS DE NEGÓCIO ---
-DESCONTO_PADRAO_GRUPO = 0.01  # 15% OFF para grupos (incentivo comercial)
+DESCONTO_PADRAO_GRUPO = 0.1  # 15% OFF para grupos (incentivo comercial)
 TARIFAS_POR_TEMPORADA = {
     "alta": 1.3,  # +30% na alta temporada
     "media": 1.0,
@@ -66,8 +66,10 @@ if submitted:
         # Comparação com tarifa média
         st.markdown("### 🔍 Comparação com Tarifa Média")
         st.write(f"- Tarifa média do período: R$ {tarifa_media:.2f}")
+        variacao_perc = (tarifa_sugerida - tarifa_base) / tarifa_base * 100
         st.write(
-            f"- Tarifa sugerida para o grupo: R$ {tarifa_sugerida:.2f} ({(tarifa_sugerida - tarifa_media) / tarifa_media * 100:.1f}%)")
+            f"- Tarifa sugerida para o grupo: R$ {tarifa_sugerida:.2f} ({variacao_perc:.1f}%)")
+
 
         if tarifa_sugerida >= tarifa_media and evento_especial == "Não":
             st.warning("⚠️ **Atenção!** Tarifa igual/média pode desincentivar a venda via comercial.")
