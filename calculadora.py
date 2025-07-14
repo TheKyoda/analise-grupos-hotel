@@ -35,7 +35,7 @@ if submitted:
     if data_entrada >= data_saida:
         st.error("❌ Data de saída deve ser após a entrada!")
     else:
-        # 1. Define temporada (exemplo simplificado)
+        # 1. Define temporada
         mes = data_entrada.month
         temporada = "alta" if mes in [12, 1, 2] else "baixa" if mes in [6, 7] else "media"
 
