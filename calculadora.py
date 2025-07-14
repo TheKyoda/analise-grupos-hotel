@@ -64,7 +64,7 @@ if submitted:
         col1, col2, col3 = st.columns(3)
         col1.metric("📅 Período", f"{noites} noites")
         col2.metric("📊 Temporada", temporada.capitalize())
-        col3.metric("💡 Tarifa Sugerida", f"R$ {tarifa_sugerida:.2f}", motivo_desconto)
+        col3.metric("💡 Tarifa Sugerida", f"R$ {tarifa_sugerida:.2f}")
 
         st.write(f"**Receita Total do Grupo:** R$ {receita_total:,.2f}")
 
