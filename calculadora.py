@@ -26,7 +26,7 @@ with st.form("dados_grupo"):
         quartos_grupo = st.number_input("🛏️ Quartos solicitados", min_value=0, value=11)
         total_quartos_hotel = st.number_input("🏨 Total de quartos", min_value=0, value=321)
         evento_especial = st.selectbox("🎉 Evento especial?", ["Não", "Sim"])
-
+        ocupacao_hotel = st.number_input("% De Ocupação", min_value=0, value=100%)
     submitted = st.form_submit_button("📊 Calcular")
 
 # --- CÁLCULOS ---
