@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Análise de Grupos - Hotel", layout="centered")
 
 # --- REGRAS DE NEGÓCIO ---
-DESCONTO_PADRAO_GRUPO = 0.1  # 15% OFF para grupos (incentivo comercial)
+DESCONTO_PADRAO_GRUPO = 0.05  # 15% OFF para grupos (incentivo comercial)
 TARIFAS_POR_TEMPORADA = {
     "alta": 1.3,  # +30% na alta temporada
     "media": 1.0,
