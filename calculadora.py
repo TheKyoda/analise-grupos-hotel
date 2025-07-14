@@ -53,7 +53,7 @@ if submitted:
         # 4. Arredondamento para faixas de 10
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
         tarifa_superior = math.ceil(tarifa_sugerida / 10) * 10
-        st.info(f"↕️ Mínimo: R$ {tarifa_inferior} Aplicar: R$ {tarifa_superior}")
+        st.info(f"↕️ Mínimo: R$ {tarifa_inferior} / Aplicar: R$ {tarifa_superior}")
 
         # 5. Calcula noites e receita total
         noites = (data_saida - data_entrada).days
