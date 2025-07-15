@@ -48,7 +48,7 @@ if submitted:
             motivo_desconto = f"Desconto comercial de {DESCONTO_PADRAO_GRUPO * 100:.0f}%"
         else:
             tarifa_sugerida = tarifa_base * (1.1 - DESCONTO_PADRAO_GRUPO)
-            motivo_desconto = "Evento especial: 5%" {MOTIVO_DESCONTO * 100:.0f}%"
+            motivo_desconto = "Evento especial: 5%"
 
         # 4. Arredondamento para faixas de 10
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
