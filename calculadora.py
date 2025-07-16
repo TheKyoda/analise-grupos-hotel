@@ -39,10 +39,10 @@ if submitted:
 
         # --- Define desconto com base na ocupação
         if ocupacao_percentual <= 40:
-            desconto = 0.15
+            desconto = 0.10
             motivo_desconto = "Baixa ocupação (<=40%) → desconto de 15%"
         elif ocupacao_percentual <= 70:
-            desconto = 0.10
+            desconto = 0.08
             motivo_desconto = "Ocupação média (41-70%) → desconto de 10%"
         else:
             desconto = 0.05
