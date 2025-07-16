@@ -7,7 +7,6 @@ import math
 st.set_page_config(page_title="Análise de Grupos - Hotel", layout="centered")
 
 # --- REGRAS DE NEGÓCIO ---
-DESCONTO_PADRAO_GRUPO = 0.1  # 10% OFF para grupos (incentivo comercial)
 TARIFAS_POR_TEMPORADA = {
     "alta": 1.3,   # +30% na alta temporada
     "media": 1.0,
@@ -42,18 +41,15 @@ if submitted:
         # 2. Calcula tarifa base ajustada pela temporada
         tarifa_base = tarifa_media * TARIFAS_POR_TEMPORADA[temporada]
 
-        # 3. Aplica desconto padrão para grupos
-        # --- DESCONTOS CORRETOS ---
+        # 3. Aplica desconto correto
         if evento_especial == "Não":
-            desconto = 0.12  # até 12%
+            desconto = 0.12  # 12%
             motivo_desconto = "Desconto comercial padrão (12%)"
         else:
-            desconto = 0.07  # até 7%
+            desconto = 0.07  # 7%
             motivo_desconto = "Evento especial: desconto reduzido (7%)"
-        
-        # Aplica o desconto sobre a tarifa base
-        tarifa_sugerida = tarifa_base * (1 - desconto)
 
+        tarifa_sugerida = tarifa_base * (1 - desconto)
 
         # 4. Arredondamento para faixas de 10
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
@@ -78,6 +74,7 @@ if submitted:
         st.write(f"- Tarifa média do período: R$ {tarifa_media:.2f}")
         variacao_perc = (tarifa_sugerida - tarifa_media) / tarifa_media * 100
         st.write(f"- Tarifa sugerida para o grupo: R$ {tarifa_sugerida:.2f} ({variacao_perc:.1f}%)")
+        st.write(f"- **Motivo do Desconto:** {motivo_desconto}")
 
         if tarifa_sugerida >= tarifa_media and evento_especial == "Não":
             st.warning("⚠️ **Atenção!** Tarifa igual/média pode desincentivar a venda via comercial.")
