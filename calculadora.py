@@ -1,6 +1,5 @@
 import streamlit as st
 from datetime import datetime
-import matplotlib.pyplot as plt
 import math
 
 # --- CONFIGURAÇÕES ---
@@ -8,9 +7,9 @@ st.set_page_config(page_title="Análise de Grupos - Hotel", layout="centered")
 
 # --- REGRAS DE NEGÓCIO ---
 TARIFAS_POR_TEMPORADA = {
-    "alta": 1.3,   # +30% na alta temporada
+    "alta": 1.3,
     "media": 1.0,
-    "baixa": 0.8   # -20% na baixa
+    "baixa": 0.8
 }
 
 # --- INTERFACE ---
@@ -22,6 +21,7 @@ with st.form("dados_grupo"):
         data_entrada = st.date_input("📅 Data de Entrada", datetime.today())
         data_saida = st.date_input("📅 Data de Saída", datetime.today())
         tarifa_media = st.number_input("💰 Tarifa média (R$)", min_value=0.0, value=359.00)
+        ocupacao_percentual = st.slider("📈 Ocupação do hotel no período (%)", 0, 100, 50)
     with col2:
         quartos_grupo = st.number_input("🛏️ Quartos solicitados", min_value=0, value=11)
         total_quartos_hotel = st.number_input("🏨 Total de quartos", min_value=0, value=321)
@@ -30,37 +30,39 @@ with st.form("dados_grupo"):
 
 # --- CÁLCULOS ---
 if submitted:
-    # Validações
     if data_entrada >= data_saida:
         st.error("❌ Data de saída deve ser após a entrada!")
     else:
-        # 1. Define temporada
         mes = data_entrada.month
         temporada = "alta" if mes in [12, 1, 2] else "baixa" if mes in [6, 7] else "media"
-
-        # 2. Calcula tarifa base ajustada pela temporada
         tarifa_base = tarifa_media * TARIFAS_POR_TEMPORADA[temporada]
 
-        # 3. Aplica desconto correto
-        if evento_especial == "Não":
-            desconto = 0.12  # 12%
-            motivo_desconto = "Desconto comercial padrão (12%)"
+        # --- Define desconto com base na ocupação
+        if ocupacao_percentual <= 40:
+            desconto = 0.15
+            motivo_desconto = "Baixa ocupação (<=40%) → desconto de 15%"
+        elif ocupacao_percentual <= 70:
+            desconto = 0.10
+            motivo_desconto = "Ocupação média (41-70%) → desconto de 10%"
         else:
-            desconto = 0.07  # 7%
-            motivo_desconto = "Evento especial: desconto reduzido (7%)"
+            desconto = 0.05
+            motivo_desconto = "Alta ocupação (>70%) → desconto de 5%"
+
+        # --- Ajuste adicional se for evento especial
+        if evento_especial == "Sim":
+            desconto = max(desconto - 0.03, 0.02)  # reduz o desconto em 3%
 
         tarifa_sugerida = tarifa_base * (1 - desconto)
 
-        # 4. Arredondamento para faixas de 10
+        # Arredondamento
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
         tarifa_superior = math.ceil(tarifa_sugerida / 10) * 10
         st.info(f"↕️ Mínimo: R$ {tarifa_inferior} / Aplicar: R$ {tarifa_superior}")
 
-        # 5. Calcula noites e receita total
         noites = (data_saida - data_entrada).days
         receita_total = tarifa_sugerida * quartos_grupo * noites
 
-        # --- EXIBE RESULTADOS ---
+        # --- RESULTADOS ---
         st.success("✅ **Resultados**")
         col1, col2, col3 = st.columns(3)
         col1.metric("📅 Período", f"{noites} noites")
@@ -69,12 +71,9 @@ if submitted:
 
         st.write(f"**Receita Total do Grupo:** R$ {receita_total:,.2f}")
 
-        # Comparação com tarifa média
+        # Comparação
         st.markdown("### 🔍 Comparação com Tarifa Média")
-        st.write(f"- Tarifa média do período: R$ {tarifa_media:.2f}")
         variacao_perc = (tarifa_sugerida - tarifa_media) / tarifa_media * 100
-        st.write(f"- Tarifa sugerida para o grupo: R$ {tarifa_sugerida:.2f} ({variacao_perc:.1f}%)")
-        st.write(f"- **Motivo do Desconto:** {motivo_desconto}")
-
-        if tarifa_sugerida >= tarifa_media and evento_especial == "Não":
-            st.warning("⚠️ **Atenção!** Tarifa igual/média pode desincentivar a venda via comercial.")
+        st.write(f"- Tarifa média: R$ {tarifa_media:.2f}")
+        st.write(f"- Tarifa sugerida: R$ {tarifa_sugerida:.2f} ({variacao_perc:.1f}%)")
+        st.write(f"- **Motivo do desconto:** {motivo_desconto}")
