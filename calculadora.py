@@ -44,10 +44,10 @@ if submitted:
 
         # 3. Aplica desconto padrão para grupos
         if evento_especial == "Não":
-            tarifa_sugerida = tarifa_base * (0.8 - DESCONTO_PADRAO_GRUPO)
+            tarifa_sugerida = tarifa_base * (1 - DESCONTO_PADRAO_GRUPO)
             motivo_desconto = f"Desconto comercial de {DESCONTO_PADRAO_GRUPO * 100:.0f}%"
         else:
-            tarifa_sugerida = tarifa_base * (1.1 - DESCONTO_PADRAO_GRUPO)
+            tarifa_sugerida = tarifa_base * (1 - DESCONTO_PADRAO_GRUPO)
             motivo_desconto = "Evento especial: 5%"
 
         if evento_especial == "Sim":
