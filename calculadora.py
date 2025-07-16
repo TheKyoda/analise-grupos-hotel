@@ -43,19 +43,17 @@ if submitted:
         tarifa_base = tarifa_media * TARIFAS_POR_TEMPORADA[temporada]
 
         # 3. Aplica desconto padrão para grupos
+        # --- DESCONTOS CORRETOS ---
         if evento_especial == "Não":
-            tarifa_sugerida = tarifa_base * (1 - DESCONTO_PADRAO_GRUPO)
-            motivo_desconto = f"Desconto comercial de {DESCONTO_PADRAO_GRUPO * 100:.0f}%"
+            desconto = 0.12  # até 12%
+            motivo_desconto = "Desconto comercial padrão (12%)"
         else:
-            tarifa_sugerida = tarifa_base * (1 - DESCONTO_PADRAO_GRUPO)
-            motivo_desconto = "Evento especial: 5%"
+            desconto = 0.07  # até 7%
+            motivo_desconto = "Evento especial: desconto reduzido (7%)"
+        
+        # Aplica o desconto sobre a tarifa base
+        tarifa_sugerida = tarifa_base * (1 - desconto)
 
-        if evento_especial == "Sim":
-            tarifa_sugerida = tarifa_base * (1 - DESCONTO_PADRAO_GRUPO)
-            motivo_desconto = f"Desconto comercial de {DESCONTO_PADRAO_GRUPO * 100:.0f}%"
-        else:
-            tarifa_sugerida = tarifa_base * (0.8 - DESCONTO_PADRAO_GRUPO)
-            motivo_desconto = "Evento especial: 5%"
 
         # 4. Arredondamento para faixas de 10
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
