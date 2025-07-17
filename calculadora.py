@@ -34,43 +34,42 @@ if submitted:
     if data_entrada >= data_saida:
         st.error("❌ Data de saída deve ser após a entrada!")
     else:
-        # 1. Ajusta tarifa média se for comissionada
-        if tipo_tarifa == "Comissionada":
-            reducao_comissao = 25
-            tarifa_media -= reducao_comissao
-            st.warning(f"💸 Tarifa comissionada: -R$ {reducao_comissao:.2f} aplicados na tarifa média")
-
-        # 2. Define temporada
+        noites = (data_saida - data_entrada).days
         mes = data_entrada.month
         temporada = "alta" if mes in [12, 1, 2] else "baixa" if mes in [6, 7] else "media"
-        tarifa_base = tarifa_media * TARIFAS_POR_TEMPORADA[temporada]
 
-        # 3. Define desconto com base na ocupação
-        if ocupacao_percentual <= 40:
-            desconto = 0.10
-            motivo_desconto = "Baixa ocupação (≤ 40%) → desconto de 10%"
-        elif ocupacao_percentual <= 70:
-            desconto = 0.08
-            motivo_desconto = "Ocupação média (41% a 70%) → desconto de 8%"
+        if tipo_tarifa == "Comissionada":
+            # --- Tarifa comissionada: subtrai valor fixo e ignora demais regras
+            reducao_comissao = 25
+            tarifa_sugerida = tarifa_media - reducao_comissao
+            motivo_desconto = f"Tarifa comissionada: desconto fixo de R$ {reducao_comissao:.2f}"
+            st.warning(f"💸 {motivo_desconto}")
         else:
-            desconto = 0.05
-            motivo_desconto = "Alta ocupação (> 70%) → desconto de 5%"
+            # --- Cálculo normal para tarifa NET
+            tarifa_base = tarifa_media * TARIFAS_POR_TEMPORADA[temporada]
 
-        # 4. Ajuste adicional se for evento especial
-        if evento_especial == "Sim":
-            desconto = max(desconto - 0.03, 0.02)
-            motivo_desconto += " (ajustado por evento especial)"
+            if ocupacao_percentual <= 40:
+                desconto = 0.10
+                motivo_desconto = "Baixa ocupação (≤ 40%) → desconto de 10%"
+            elif ocupacao_percentual <= 70:
+                desconto = 0.08
+                motivo_desconto = "Ocupação média (41% a 70%) → desconto de 8%"
+            else:
+                desconto = 0.05
+                motivo_desconto = "Alta ocupação (> 70%) → desconto de 5%"
 
-        # 5. Calcula tarifa sugerida
-        tarifa_sugerida = tarifa_base * (1 - desconto)
+            if evento_especial == "Sim":
+                desconto = max(desconto - 0.03, 0.02)
+                motivo_desconto += " (ajustado por evento especial)"
 
-        # 6. Arredondamento
+            tarifa_sugerida = tarifa_base * (1 - desconto)
+
+        # --- Arredondamento
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
         tarifa_superior = math.ceil(tarifa_sugerida / 10) * 10
         st.info(f"↕️ Mínimo: R$ {tarifa_inferior} / Aplicar: R$ {tarifa_superior}")
 
-        # 7. Receita total
-        noites = (data_saida - data_entrada).days
+        # --- Receita total
         receita_total = tarifa_sugerida * quartos_grupo * noites
 
         # --- RESULTADOS ---
@@ -85,6 +84,6 @@ if submitted:
         # Comparação
         st.markdown("### 🔍 Comparação com Tarifa Média")
         variacao_perc = (tarifa_sugerida - tarifa_media) / tarifa_media * 100
-        st.write(f"- Tarifa média ajustada: R$ {tarifa_media:.2f}")
+        st.write(f"- Tarifa média: R$ {tarifa_media:.2f}")
         st.write(f"- Tarifa sugerida: R$ {tarifa_sugerida:.2f} ({variacao_perc:.1f}%)")
         st.write(f"- **Motivo do desconto:** {motivo_desconto}")
