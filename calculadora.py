@@ -39,10 +39,13 @@ if submitted:
         temporada = "alta" if mes in [12, 1, 2] else "baixa" if mes in [6, 7] else "media"
 
         if tipo_tarifa == "Comissionada":
-            # --- Tarifa comissionada: subtrai valor fixo e ignora demais regras
-            reducao_comissao = 25
+            # --- Tarifa comissionada: desconto depende da ocupação
+            if ocupacao_percentual <= 60:
+                reducao_comissao = 30
+            else:
+                reducao_comissao = 10
             tarifa_sugerida = tarifa_media - reducao_comissao
-            motivo_desconto = f"Tarifa comissionada: desconto fixo de R$ {reducao_comissao:.2f}"
+            motivo_desconto = f"Tarifa comissionada: desconto de R$ {reducao_comissao:.2f} baseado na ocupação ({ocupacao_percentual}%)"
             st.warning(f"💸 {motivo_desconto}")
         else:
             # --- Cálculo normal para tarifa NET
