@@ -16,18 +16,27 @@ TARIFAS_POR_TEMPORADA = {
 st.title("🏨 Cálculo de Demanda de Grupos")
 
 with st.form("dados_grupo"):
+    st.markdown("### 📥 Informações do Grupo")
+
     col1, col2 = st.columns(2)
+
     with col1:
         data_entrada = st.date_input("📅 Data de Entrada", datetime.today())
         data_saida = st.date_input("📅 Data de Saída", datetime.today())
         tarifa_media = st.number_input("💰 Tarifa média (R$)", min_value=0.0, value=359.00)
-        ocupacao_percentual = st.slider("📈 Ocupação do hotel no período (%)", 0, 100, 50)
+        st.markdown("📈 **Ocupação do hotel no período (%)**")
+        ocupacao_percentual = st.slider("", 0, 100, 50, key="slider_ocupacao")
         tipo_tarifa = st.selectbox("🧾 Tipo de Tarifa", ["NET", "Comissionada"])
+
     with col2:
         quartos_grupo = st.number_input("🛏️ Quartos solicitados", min_value=0, value=11)
         total_quartos_hotel = st.number_input("🏨 Total de quartos", min_value=0, value=321)
         evento_especial = st.selectbox("🎉 Evento especial?", ["Não", "Sim"])
+
+    # Botão centralizado
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
     submitted = st.form_submit_button("📊 Calcular")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # --- CÁLCULOS ---
 if submitted:
@@ -69,11 +78,7 @@ if submitted:
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
         tarifa_superior = math.ceil(tarifa_sugerida / 10) * 10
 
-        if tarifa_superior < tarifa_inferior:
-            cor_mensagem = "🔴"
-        else:
-            cor_mensagem = "🔵"
-
+        cor_mensagem = "🔵" if tarifa_superior >= tarifa_inferior else "🔴"
         st.info(f"{cor_mensagem} **Mínimo: R$ {tarifa_inferior:.0f} / Aplicar: R$ {tarifa_superior:.0f}**")
 
         # --- Receita total
