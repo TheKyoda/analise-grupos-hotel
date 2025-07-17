@@ -39,7 +39,6 @@ if submitted:
         temporada = "alta" if mes in [12, 1, 2] else "baixa" if mes in [6, 7] else "media"
 
         if tipo_tarifa == "Comissionada":
-            # --- Tarifa comissionada: desconto depende da ocupação
             if ocupacao_percentual <= 60:
                 reducao_comissao = 20
             else:
@@ -48,7 +47,6 @@ if submitted:
             motivo_desconto = f"Tarifa comissionada: desconto de R$ {reducao_comissao:.2f} baseado na ocupação ({ocupacao_percentual}%)"
             st.warning(f"💸 {motivo_desconto}")
         else:
-            # --- Cálculo normal para tarifa NET
             tarifa_base = tarifa_media * TARIFAS_POR_TEMPORADA[temporada]
 
             if ocupacao_percentual <= 40:
@@ -70,7 +68,13 @@ if submitted:
         # --- Arredondamento
         tarifa_inferior = math.floor(tarifa_sugerida / 10) * 10
         tarifa_superior = math.ceil(tarifa_sugerida / 10) * 10
-        st.info(f"↕️ Mínimo: R$ {tarifa_inferior} / Aplicar: R$ {tarifa_superior}")
+
+        if tarifa_superior < tarifa_inferior:
+            cor_mensagem = "🔴"
+        else:
+            cor_mensagem = "🔵"
+
+        st.info(f"{cor_mensagem} **Mínimo: R$ {tarifa_inferior:.0f} / Aplicar: R$ {tarifa_superior:.0f}**")
 
         # --- Receita total
         receita_total = tarifa_sugerida * quartos_grupo * noites
