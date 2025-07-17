@@ -41,7 +41,7 @@ if submitted:
         if tipo_tarifa == "Comissionada":
             # --- Tarifa comissionada: desconto depende da ocupação
             if ocupacao_percentual <= 60:
-                reducao_comissao = 30
+                reducao_comissao = 20
             else:
                 reducao_comissao = 10
             tarifa_sugerida = tarifa_media - reducao_comissao
