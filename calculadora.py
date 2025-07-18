@@ -4,35 +4,6 @@ import math
 
 # --- CONFIGURAÇÕES ---
 st.set_page_config(page_title="Análise de Grupos - Hotel", layout="centered")
-
-# CSS personalizado
-st.markdown("""
-    <style>
-        .main {
-            background-color: #f0f2f6;
-            padding: 20px;
-        }
-        h1, h2, h3 {
-            color: #1f77b4;
-        }
-        .stButton>button {
-            background-color: #1f77b4;
-            color: white;
-            border-radius: 10px;
-            padding: 10px 20px;
-        }
-        .stTextInput>div>div>input {
-            border: 2px solid #1f77b4;
-            border-radius: 10px;
-        }
-        .stDataFrame {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # --- REGRAS DE NEGÓCIO ---
 TARIFAS_POR_TEMPORADA = {
     "alta": 1.3,
